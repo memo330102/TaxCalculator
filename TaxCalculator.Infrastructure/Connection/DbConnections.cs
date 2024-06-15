@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace TaxCalculator.Infrastructure.Connection
 {
-    public class DbConnection
+    public class DbConnections
     {
         private IConfiguration _configuration;
 
-        public DbConnection(IConfiguration configuration)
+        public DbConnections(IConfiguration configuration)
         {
             _configuration = configuration;
         }

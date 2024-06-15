@@ -28,7 +28,8 @@ namespace TaxCalculator.Application.Services
                 appliedTaxes[taxCalculator.TaxType] = taxCalculator.CalculateTax(taxPayer);
             }
 
-            decimal totalTax = _taxCalculators.Sum(tc => tc.CalculateTax(taxPayer));
+            decimal totalTax = appliedTaxes.Values.Sum()
+                ;
             decimal netIncome = taxPayer.GrossIncome - totalTax;
 
 

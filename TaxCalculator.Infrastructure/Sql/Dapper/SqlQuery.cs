@@ -11,9 +11,9 @@ namespace TaxCalculator.Infrastructure.Sql.Dapper
 {
     public class SqlQuery : ISqlQuery
     {
-        private DbConnection _connection;
+        private DbConnections _connection;
 
-        public SqlQuery(DbConnection connection)
+        public SqlQuery(DbConnections connection)
         {
             _connection = connection;
         }

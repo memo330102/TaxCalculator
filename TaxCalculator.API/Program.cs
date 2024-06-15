@@ -1,7 +1,13 @@
 using TaxCalculator.Application.Services;
 using TaxCalculator.Domain.Interfaces;
 using TaxCalculator.Infrastructure.Helpers;
+using TaxCalculator.Infrastructure.Connection;
 using TaxCalculator.Infrastructure.Services;
+using TaxCalculator.Infrastructure.Sql.Dapper;
+using TaxCalculator.Infrastructure.Sql.Models;
+using SQLitePCL;
+
+Batteries.Init(); // Initialize SQLite
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +21,9 @@ builder.Services.AddScoped<TaxCalculationService>();
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();
 builder.Services.AddTransient<IHelperTaxCalculation, HelperTaxCalculation>();
+builder.Services.AddTransient<ISqlQuery, SqlQuery>();
+builder.Services.AddSingleton<DbConnections>();
+builder.Services.AddHostedService<DBContext>();
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();
