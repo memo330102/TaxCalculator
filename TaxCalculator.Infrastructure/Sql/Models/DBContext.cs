@@ -30,6 +30,26 @@ namespace TaxCalculator.Infrastructure.Sql.Models
             return Task.CompletedTask;
         }
 
+        public async Task InitializeDatabase()
+        {
+            var createTableQuery = @"
+                CREATE TABLE IF NOT EXISTS TaxConfig (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    MinApplyableSocialTax DECIMAL NOT NULL,
+                    MaxApplyableSocialTax DECIMAL NOT NULL,
+                    SocialTaxRate DECIMAL NOT NULL,
+                    MinApplyableIncomeTax DECIMAL NOT NULL,
+                    IncomeTaxRate DECIMAL NOT NULL,
+                    CharitySpentMaxRate DECIMAL NOT NULL
+                );
+            ";
+
+            await _sqlQuery.ExecuteAsync(createTableQuery);
+
+            await insertDefaultValuesToTable();
+        }
+
+
         public async Task<int> CheckTagConfigTableCount()
         {
             var checkIfEmptyQuery = @"SELECT COUNT(1) FROM TaxConfig;";
@@ -61,24 +81,6 @@ namespace TaxCalculator.Infrastructure.Sql.Models
 
                 await _sqlQuery.ExecuteAsync(insertDefaultValuesQuery, defaultValues);
             }
-        }
-        public async Task InitializeDatabase()
-        {
-            var createTableQuery = @"
-                CREATE TABLE IF NOT EXISTS TaxConfig (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    MinApplyableSocialTax DECIMAL NOT NULL,
-                    MaxApplyableSocialTax DECIMAL NOT NULL,
-                    SocialTaxRate DECIMAL NOT NULL,
-                    MinApplyableIncomeTax DECIMAL NOT NULL,
-                    IncomeTaxRate DECIMAL NOT NULL,
-                    CharitySpentMaxRate DECIMAL NOT NULL
-                );
-            ";
-
-            await _sqlQuery.ExecuteAsync(createTableQuery);
-
-            await insertDefaultValuesToTable();
         }
     }
 }

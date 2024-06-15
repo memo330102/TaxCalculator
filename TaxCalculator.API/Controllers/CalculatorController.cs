@@ -10,9 +10,9 @@ namespace TaxCalculator.API.Controllers
     [ApiController]
     public class CalculatorController : ControllerBase
     {
-        private readonly TaxCalculationService _taxCalculationService;
-        private static readonly Dictionary<string, Taxes> TaxCache = new();
-        public CalculatorController(TaxCalculationService taxCalculationService)
+        private readonly ITaxCalculationService _taxCalculationService;
+        private static readonly Dictionary<int, Taxes> TaxCache = new();
+        public CalculatorController(ITaxCalculationService taxCalculationService)
         {
             _taxCalculationService = taxCalculationService;
         }
@@ -20,19 +20,47 @@ namespace TaxCalculator.API.Controllers
         [HttpPost("calculate")]
         public async Task<ActionResult<Taxes>> Calculate([FromBody] TaxPayer taxPayer)
         {
-            if (taxPayer == null || !ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (TaxCache.ContainsKey(taxPayer.SSN))
+            if (taxPayer == null)
             {
-                return Ok(TaxCache[taxPayer.SSN]);
+                //_logger.LogWarning("TaxPayer is null.");
+                return NotFound("TaxPayer cannot be null.");
             }
 
-            var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
+            if (!ModelState.IsValid)
+            {
+                //_logger.LogWarning("Model state is invalid: {ModelStateErrors}", ModelState);
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                if (TaxCache.ContainsKey(taxPayer.SSN))
+                {
+                    return Ok(TaxCache[taxPayer.SSN]);
+                }
 
-            TaxCache[taxPayer.SSN] = taxes;
+                var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
 
-            return Ok(taxes);
+                TaxCache[taxPayer.SSN] = taxes;
+
+                return Ok(taxes);
+            }
+            catch (ArgumentException aex)
+            {
+                //_logger.LogError(ex, "An argument exception occurred while calculating taxes for SSN: {SSN}", taxPayer.SSN);
+                return BadRequest(aex.Message);
+            }
+            catch (InvalidOperationException ioex)
+            {
+                //_logger.LogError(ex, "An invalid operation occurred while calculating taxes for SSN: {SSN}", taxPayer.SSN);
+                return BadRequest("An error occurred during the tax calculation process." + ioex.Message);
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError(ex, "An unexpected error occurred while calculating taxes for SSN: {SSN}", taxPayer.SSN);
+                //return StatusCode(500, "An unexpected error occurred. Please try again later.");
+                return BadRequest("An unexpected error occurred." + ex.Message);
+
+            }
         }
     }
 }

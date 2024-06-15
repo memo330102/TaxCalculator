@@ -10,7 +10,7 @@ using TaxCalculator.Infrastructure.Services;
 
 namespace TaxCalculator.Application.Services
 {
-    public class TaxCalculationService
+    public class TaxCalculationService : ITaxCalculationService
     {
         private readonly IEnumerable<ITaxCalculator> _taxCalculators;
 

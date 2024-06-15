@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<TaxCalculationService>();
+builder.Services.AddScoped<ITaxCalculationService,TaxCalculationService>();
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();
 builder.Services.AddTransient<IHelperTaxCalculation, HelperTaxCalculation>();
