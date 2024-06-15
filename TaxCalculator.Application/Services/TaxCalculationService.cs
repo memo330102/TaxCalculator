@@ -19,13 +19,13 @@ namespace TaxCalculator.Application.Services
             _taxCalculators = taxCalculators;
         }
 
-        public Taxes CalculateTaxes(TaxPayer taxPayer)
+        public async Task<Taxes> CalculateTaxes(TaxPayer taxPayer)
         {
             var appliedTaxes = new Dictionary<string, decimal>();
 
             foreach (ITaxCalculator taxCalculator in _taxCalculators)
             {
-                appliedTaxes[taxCalculator.TaxType] = taxCalculator.CalculateTax(taxPayer);
+                appliedTaxes[taxCalculator.TaxType] = await taxCalculator.CalculateTax(taxPayer);
             }
 
             decimal totalTax = appliedTaxes.Values.Sum()

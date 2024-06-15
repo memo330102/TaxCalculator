@@ -16,17 +16,19 @@ namespace TaxCalculator.Infrastructure.Services
         {
             _helperTaxCalculation = helperTaxCalculation;
         }
-        public string TaxType => TaxTypeEnum.IncomeTax.ToString();
+        public  string TaxType =>  TaxTypeEnum.IncomeTax.ToString();
 
-        public decimal CalculateTax(TaxPayer taxPayer)
+        public async Task<decimal> CalculateTax(TaxPayer taxPayer)
         {
-            decimal taxableIncome = _helperTaxCalculation.TaxableIncome(taxPayer.GrossIncome);
+            var taxConfig = await _helperTaxCalculation.GetTaxConfigAsync();
 
-            decimal charityAdjustment = _helperTaxCalculation.CharityAdjustment(taxPayer.GrossIncome, taxPayer.CharitySpent);
+            decimal taxableIncome = await _helperTaxCalculation.TaxableIncome(taxPayer.GrossIncome);
 
-            taxableIncome = _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+            decimal charityAdjustment = await _helperTaxCalculation.CharityAdjustment(taxPayer.GrossIncome, taxPayer.CharitySpent);
 
-            return taxableIncome * 0.10m;
+            taxableIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+            
+            return taxableIncome * taxConfig.IncomeTaxRate;
         }
     }
 }

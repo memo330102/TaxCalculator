@@ -18,7 +18,7 @@ namespace TaxCalculator.API.Controllers
         }
 
         [HttpPost("calculate")]
-        public ActionResult<Taxes> Calculate([FromBody] TaxPayer taxPayer)
+        public async Task<ActionResult<Taxes>> Calculate([FromBody] TaxPayer taxPayer)
         {
             if (taxPayer == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -28,7 +28,7 @@ namespace TaxCalculator.API.Controllers
                 return Ok(TaxCache[taxPayer.SSN]);
             }
 
-            var taxes = _taxCalculationService.CalculateTaxes(taxPayer);
+            var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
 
             TaxCache[taxPayer.SSN] = taxes;
 

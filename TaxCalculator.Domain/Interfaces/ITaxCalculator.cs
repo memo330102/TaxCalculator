@@ -9,7 +9,7 @@ namespace TaxCalculator.Domain.Interfaces
 {
     public interface ITaxCalculator
     {
-        decimal CalculateTax(TaxPayer taxPayer);
-        string TaxType { get; }
+        public Task<decimal> CalculateTax(TaxPayer taxPayer);
+        public string TaxType { get; }
     }
 }

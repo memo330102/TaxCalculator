@@ -55,7 +55,7 @@ namespace TaxCalculator.Infrastructure.Sql.Models
                     MaxApplyableSocialTax = 3000m,
                     SocialTaxRate = 0.15m,
                     MinApplyableIncomeTax = 1000m,
-                    IncomeTaxRate = 0.15m,
+                    IncomeTaxRate = 0.10m,
                     CharitySpentMaxRate = 0.10m
                 };
 
