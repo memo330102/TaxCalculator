@@ -6,6 +6,7 @@ using TaxCalculator.Infrastructure.Services;
 using TaxCalculator.Infrastructure.Sql.Dapper;
 using TaxCalculator.Infrastructure.Sql.Models;
 using SQLitePCL;
+using TaxCalculator.Domain.ValueObjects;
 
 Batteries.Init(); // Initialize SQLite
 
@@ -17,6 +18,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<TaxConfig>(builder.Configuration.GetSection("TaxConfig"));
+
 builder.Services.AddScoped<ITaxCalculationService,TaxCalculationService>();
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();

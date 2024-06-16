@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaxCalculator.Domain.Interfaces;
+using TaxCalculator.Domain.ValueObjects;
 using TaxCalculator.Infrastructure.Connection;
 
 namespace TaxCalculator.Infrastructure.Sql.Models
@@ -14,9 +17,10 @@ namespace TaxCalculator.Infrastructure.Sql.Models
     public class DBContext : IHostedService
     {
         private readonly ISqlQuery _sqlQuery;
-
-        public DBContext(ISqlQuery sqlQuery)
+        private readonly TaxConfig _taxConfig;
+        public DBContext(IOptions<TaxConfig> taxConfigOptions, ISqlQuery sqlQuery)
         {
+            _taxConfig = taxConfigOptions.Value;
             _sqlQuery = sqlQuery;
         }
 
@@ -71,12 +75,12 @@ namespace TaxCalculator.Infrastructure.Sql.Models
 
                 var defaultValues = new
                 {
-                    MinApplyableSocialTax = 1000m,
-                    MaxApplyableSocialTax = 3000m,
-                    SocialTaxRate = 0.15m,
-                    MinApplyableIncomeTax = 1000m,
-                    IncomeTaxRate = 0.10m,
-                    CharitySpentMaxRate = 0.10m
+                    MinApplyableSocialTax = _taxConfig.MinApplyableSocialTax,
+                    MaxApplyableSocialTax = _taxConfig.MaxApplyableSocialTax,
+                    SocialTaxRate = _taxConfig.SocialTaxRate,
+                    MinApplyableIncomeTax = _taxConfig.MinApplyableIncomeTax,
+                    IncomeTaxRate = _taxConfig.IncomeTaxRate,
+                    CharitySpentMaxRate = _taxConfig.CharitySpentMaxRate
                 };
 
                 await _sqlQuery.ExecuteAsync(insertDefaultValuesQuery, defaultValues);
