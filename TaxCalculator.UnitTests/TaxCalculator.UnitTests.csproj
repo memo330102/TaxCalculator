@@ -23,12 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Application\" />
-    <Folder Include="API\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\TaxCalculator.Application\TaxCalculator.Application.csproj" />
     <ProjectReference Include="..\TaxCalculator.Domain\TaxCalculator.Domain.csproj" />
     <ProjectReference Include="..\TaxCalculator.Infrastructure\TaxCalculator.Infrastructure.csproj" />
   </ItemGroup>

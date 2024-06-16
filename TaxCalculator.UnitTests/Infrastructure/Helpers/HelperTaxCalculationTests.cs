@@ -24,7 +24,11 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
             var taxConfig = new TaxConfig
             {
                 MinApplyableIncomeTax = 1000,
-                CharitySpentMaxRate = 0.10m
+                CharitySpentMaxRate = 0.10m,
+                IncomeTaxRate = 0.10m,
+                SocialTaxRate = 0.15m,
+                MinApplyableSocialTax = 1000,
+                MaxApplyableSocialTax = 3000
             };
 
             _mockSqlQuery
@@ -65,14 +69,62 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
         }
 
         [Theory]
-        [InlineData(2000, 150, 150)]
+        [InlineData(2500, 500, 250)]
         [InlineData(2000, 250, 200)]
-        public async Task HelperTaxCalculation_CharityAdjustment_WithCharitySpentAboveMaxRate_ShouldReturnMaxRateAdjustment(decimal grossIncome, decimal charitySpent, decimal expected)
+        public async Task HelperTaxCalculation_CharityAdjustment_With_CharitySpent_Higher_than_MaxRate_Should_Return_MaxRate_Adjustment(decimal grossIncome, decimal charitySpent, decimal expected)
         {
 
             var charityAdjustment = await _helperTaxCalculation.CharityAdjustment(grossIncome, charitySpent);
 
             Assert.Equal(expected, charityAdjustment);
+        }
+
+        [Fact]
+        public async Task HelperTaxCalculation_AdjustTaxableIncome_With_Positive_Income_And_Charity_Should_Return_Adjusted_Income()
+        {
+            decimal taxableIncome = 1000;
+            decimal charityAdjustment = 200;
+
+            var adjustedIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+
+            Assert.Equal(800, adjustedIncome);
+        }
+
+        [Fact]
+        public async Task HelperTaxCalculation_AdjustTaxableIncome_With_Negative_Result_Should_Return_Zero()
+        {
+            decimal taxableIncome = 100;
+            decimal charityAdjustment = 200;
+
+            var adjustedIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+
+            Assert.Equal(0, adjustedIncome);
+        }
+
+        [Fact]
+        public async Task HelperTaxCalculation_GetTaxConfigAsync_Should_Return_TaxConfig()
+        {
+            var expectedConfig = new TaxConfig
+            {
+                MinApplyableIncomeTax = 1000,
+                CharitySpentMaxRate = 0.10m,
+                IncomeTaxRate = 0.10m,
+                SocialTaxRate = 0.15m,
+                MinApplyableSocialTax = 1000,
+                MaxApplyableSocialTax = 3000
+            };
+            _mockSqlQuery
+                 .Setup(sq => sq.QueryAsyncFirstOrDefault<TaxConfig>(It.IsAny<string>(), It.IsAny<object>()))
+                 .ReturnsAsync(expectedConfig);
+
+            var actualConfig = await _helperTaxCalculation.GetTaxConfigAsync();
+
+            Assert.Equal(expectedConfig.MinApplyableIncomeTax, actualConfig.MinApplyableIncomeTax);
+            Assert.Equal(expectedConfig.CharitySpentMaxRate, actualConfig.CharitySpentMaxRate);
+            Assert.Equal(expectedConfig.IncomeTaxRate, actualConfig.IncomeTaxRate);
+            Assert.Equal(expectedConfig.SocialTaxRate, actualConfig.SocialTaxRate);
+            Assert.Equal(expectedConfig.MinApplyableSocialTax, actualConfig.MinApplyableSocialTax);
+            Assert.Equal(expectedConfig.MaxApplyableSocialTax, actualConfig.MaxApplyableSocialTax);
         }
     }
 }
