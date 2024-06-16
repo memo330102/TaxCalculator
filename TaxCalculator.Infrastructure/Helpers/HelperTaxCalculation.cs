@@ -10,7 +10,7 @@ namespace TaxCalculator.Infrastructure.Helpers
 {
     public class HelperTaxCalculation : IHelperTaxCalculation
     {
-        public ISqlQuery _sqlQuery;
+        private readonly ISqlQuery _sqlQuery;
         public HelperTaxCalculation(ISqlQuery sqlQuery)
         {
             _sqlQuery = sqlQuery;

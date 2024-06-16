@@ -28,11 +28,9 @@ namespace TaxCalculator.Application.Services
                 appliedTaxes[taxCalculator.TaxType] = await taxCalculator.CalculateTax(taxPayer);
             }
 
-            decimal totalTax = appliedTaxes.Values.Sum()
-                ;
+            decimal totalTax = appliedTaxes.Values.Sum();
+
             decimal netIncome = taxPayer.GrossIncome - totalTax;
-
-
 
             return new Taxes(taxPayer.GrossIncome, taxPayer.CharitySpent, appliedTaxes, totalTax, netIncome);
         }
