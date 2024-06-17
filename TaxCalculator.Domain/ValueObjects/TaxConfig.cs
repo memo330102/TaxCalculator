@@ -14,5 +14,6 @@ namespace TaxCalculator.Domain.ValueObjects
         public decimal MinApplyableIncomeTax { get; set; }
         public decimal IncomeTaxRate { get; set; }
         public decimal CharitySpentMaxRate { get; set; }
+        public string BaseCurrency { get; set; } = "IDR";
     }
 }

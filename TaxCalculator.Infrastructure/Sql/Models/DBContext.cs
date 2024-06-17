@@ -39,12 +39,13 @@ namespace TaxCalculator.Infrastructure.Sql.Models
             var createTableQuery = @"
                 CREATE TABLE IF NOT EXISTS TaxConfig (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    MinApplyableSocialTax DECIMAL NOT NULL,
-                    MaxApplyableSocialTax DECIMAL NOT NULL,
-                    SocialTaxRate DECIMAL NOT NULL,
-                    MinApplyableIncomeTax DECIMAL NOT NULL,
-                    IncomeTaxRate DECIMAL NOT NULL,
-                    CharitySpentMaxRate DECIMAL NOT NULL
+                    MinApplyableSocialTax DECIMAL,
+                    MaxApplyableSocialTax DECIMAL,
+                    SocialTaxRate DECIMAL,
+                    MinApplyableIncomeTax DECIMAL,
+                    IncomeTaxRate DECIMAL ,
+                    CharitySpentMaxRate DECIMAL,
+                    BaseCurrency text 
                 );
             ";
 
@@ -68,10 +69,10 @@ namespace TaxCalculator.Infrastructure.Sql.Models
             {
                 var insertDefaultValuesQuery = @"INSERT INTO TaxConfig 
                                                         (MinApplyableSocialTax, MaxApplyableSocialTax, SocialTaxRate,
-                                                         MinApplyableIncomeTax, IncomeTaxRate, CharitySpentMaxRate)
+                                                         MinApplyableIncomeTax, IncomeTaxRate, CharitySpentMaxRate,BaseCurrency)
                                                  VALUES 
                                                         (@MinApplyableSocialTax, @MaxApplyableSocialTax, @SocialTaxRate,
-                                                         @MinApplyableIncomeTax, @IncomeTaxRate, @CharitySpentMaxRate);";
+                                                         @MinApplyableIncomeTax, @IncomeTaxRate, @CharitySpentMaxRate,@BaseCurrency);";
 
                 var defaultValues = new
                 {
@@ -80,7 +81,8 @@ namespace TaxCalculator.Infrastructure.Sql.Models
                     SocialTaxRate = _taxConfig.SocialTaxRate,
                     MinApplyableIncomeTax = _taxConfig.MinApplyableIncomeTax,
                     IncomeTaxRate = _taxConfig.IncomeTaxRate,
-                    CharitySpentMaxRate = _taxConfig.CharitySpentMaxRate
+                    CharitySpentMaxRate = _taxConfig.CharitySpentMaxRate,
+                    BaseCurrency= _taxConfig.BaseCurrency
                 };
 
                 await _sqlQuery.ExecuteAsync(insertDefaultValuesQuery, defaultValues);
