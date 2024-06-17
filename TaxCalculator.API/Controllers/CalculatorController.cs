@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Serilog;
 using TaxCalculator.Application.Services;
@@ -13,10 +14,11 @@ namespace TaxCalculator.API.Controllers
     public class CalculatorController : ControllerBase
     {
         private readonly ITaxCalculationService _taxCalculationService;
-        private static readonly Dictionary<int, Taxes> TaxCache = new();
-        public CalculatorController(ITaxCalculationService taxCalculationService)
+        private readonly IMemoryCache _memoryCache;
+        public CalculatorController(ITaxCalculationService taxCalculationService, IMemoryCache memoryCache)
         {
             _taxCalculationService = taxCalculationService;
+            _memoryCache = memoryCache;
         }
 
         [HttpPost("calculate")]
@@ -35,15 +37,18 @@ namespace TaxCalculator.API.Controllers
             }
             try
             {
-                if (TaxCache.ContainsKey(taxPayer.SSN))
+
+                if (_memoryCache.TryGetValue(taxPayer.SSN, out Taxes cachedTaxes))
                 {
-                    Log.Information("Tax Payer is found in cache " + taxPayer.SSN);
-                    return Ok(TaxCache[taxPayer.SSN]);
+                    Log.Information("Tax Payer found in cache: " + taxPayer.SSN);
+                    return Ok(cachedTaxes);
                 }
 
                 var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
                 Log.Information("New tax calculated. " + JsonConvert.SerializeObject(taxes));
-                TaxCache[taxPayer.SSN] = taxes;
+
+                _memoryCache.Set(taxPayer.SSN, taxes, TimeSpan.FromDays(1));
+
 
                 return Ok(taxes);
             }
