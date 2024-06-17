@@ -1,7 +1,7 @@
 Tax Calculator Web API
 
 Overview
-This project is a Tax Calculator Web API application developed using .NET 6. The implementation follows SOLID principles and Clean Code architecture. Technologies and frameworks used in this project include Dapper, SQLite, InMemory, Serilog, XUnit for testing, and Docker for containerization.
+This project is a Tax Calculator Web API application developed using .NET 6. The implementation follows SOLID principles and Clean Code architecture.Technologies and frameworks used in this project include Dapper, SQLite, InMemory, Serilog, XUnit for testing, and Docker for containerization.
 
 Technologies Used
 •	.NET 6: The framework used to build the web API.
