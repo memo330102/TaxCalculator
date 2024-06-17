@@ -42,7 +42,7 @@ namespace TaxCalculator.API.Controllers
                 }
 
                 var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
-                Log.Information("Taxes calculated. " + JsonConvert.SerializeObject(taxes));
+                Log.Information("New tax calculated. " + JsonConvert.SerializeObject(taxes));
                 TaxCache[taxPayer.SSN] = taxes;
 
                 return Ok(taxes);
