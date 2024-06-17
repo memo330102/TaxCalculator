@@ -7,8 +7,13 @@ using TaxCalculator.Infrastructure.Sql.Dapper;
 using TaxCalculator.Infrastructure.Sql.Models;
 using SQLitePCL;
 using TaxCalculator.Domain.ValueObjects;
+using Serilog;
 
 Batteries.Init(); // Initialize SQLite
+
+Log.Logger = new LoggerConfiguration() // initialize Serilog
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<TaxConfig>(builder.Configuration.GetSection("TaxConfig"));
-
+builder.Host.UseSerilog();
 builder.Services.AddScoped<ITaxCalculationService,TaxCalculationService>();
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();

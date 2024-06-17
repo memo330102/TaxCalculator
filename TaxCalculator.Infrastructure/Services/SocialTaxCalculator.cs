@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,17 +21,35 @@ namespace TaxCalculator.Infrastructure.Services
 
         public async Task<decimal> CalculateTax(TaxPayer taxPayer)
         {
-            var taxConfig = await _helperTaxCalculation.GetTaxConfigAsync();
+            try
+            {
+                var taxConfig = await _helperTaxCalculation.GetTaxConfigAsync();
 
-            decimal taxableIncome = await _helperTaxCalculation.TaxableIncome(taxPayer.GrossIncome);
+                decimal taxableIncome = await _helperTaxCalculation.TaxableIncome(taxPayer.GrossIncome);
 
-            decimal charityAdjustment = await _helperTaxCalculation.CharityAdjustment(taxPayer.GrossIncome, taxPayer.CharitySpent);
+                decimal charityAdjustment = await _helperTaxCalculation.CharityAdjustment(taxPayer.GrossIncome, taxPayer.CharitySpent);
 
-            taxableIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+                taxableIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
 
-            decimal socialTaxableIncome = taxPayer.GrossIncome > taxConfig.MinApplyableSocialTax ? Math.Min(taxableIncome, taxConfig.MaxApplyableSocialTax - taxConfig.MinApplyableSocialTax) : 0;
+                decimal socialTaxableIncome = taxPayer.GrossIncome > taxConfig.MinApplyableSocialTax ? Math.Min(taxableIncome, taxConfig.MaxApplyableSocialTax - taxConfig.MinApplyableSocialTax) : 0;
 
-            return socialTaxableIncome * taxConfig.SocialTaxRate;
+                return socialTaxableIncome * taxConfig.SocialTaxRate;
+            }
+            catch (ArgumentNullException ex)
+            {
+                Log.Error(ex, "Social Tax Error ArgumentNullException ", ex.Message);
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Log.Error(ex, "Social Tax Error InvalidOperationException ", ex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Social Tax Error Exception ", ex.Message);
+                throw;
+            }
         }
     }
 }
