@@ -6,26 +6,26 @@ This project is a Tax Calculator Web API application developed using .NET 6. The
 
 Technologies Used
 
-•	.NET 6: The framework used to build the web API.
-•	Dapper: ORM for data access.
-•	SQLite: The database used to store tax configuration parameters.
-•	InMemory: For caching and in-memory operations.
-•	Serilog: Logging library for structured logging.
-•	XUnit: Testing framework for unit tests.
-•	Docker: Containerization for running the application in isolated environments.
+1. 	.NET 6: The framework used to build the web API.
+2.	Dapper: ORM for data access.
+3.	SQLite: The database used to store tax configuration parameters.
+4.	InMemory: For caching and in-memory operations.
+5.	Serilog: Logging library for structured logging.
+6.	XUnit: Testing framework for unit tests.
+7.	Docker: Containerization for running the application in isolated environments.
 
 Project Structure
 
-•	TaxCalculator.API: Contains the main API project and database initialization logic.
-•	TaxCalculator.Domain: Contains domain entities, interfaces, enums and valueobjects.
-•	TaxCalculator.Infrastructure: Contains the implementation of services, helpers and data access using Dapper.
-•	TaxCalculator.Application: Contains business logic and service layer.
-•	TaxCalculator.Tests: Contains unit tests covering all calculations and functionalities.
+1.	TaxCalculator.API: Contains the main API project and database initialization logic.
+2.	TaxCalculator.Domain: Contains domain entities, interfaces, enums and valueobjects.
+3.	TaxCalculator.Infrastructure: Contains the implementation of services, helpers and data access using Dapper.
+4.	TaxCalculator.Application: Contains business logic and service layer.
+5.	TaxCalculator.Tests: Contains unit tests covering all calculations and functionalities.
 
 Database
 
-•	SQLite Database: The database is stored in the “TaxCalculator.API” called as “exadel” project. It includes a “TaxConfig” table that holds all parameters for tax calculations.
-•	TaxConfig Table: Parameters stored in this table can be modified without changing the code, providing flexibility.
+1.	SQLite Database: The database is stored in the “TaxCalculator.API” called as “exadel” project. It includes a “TaxConfig” table that holds all parameters for tax calculations.
+2.	TaxConfig Table: Parameters stored in this table can be modified without changing the code, providing flexibility.
 
 Initial Database Setup
 
@@ -55,9 +55,9 @@ Getting Started
 
 Prerequisites
 
-•	.NET 6 SDK
-•	Docker (for containerization)
-•	SQLite
+1.	.NET 6 SDK
+2.	Docker (for containerization)
+3.	SQLite
 
 Running the Application
 
