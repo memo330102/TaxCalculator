@@ -35,42 +35,19 @@ namespace TaxCalculator.API.Controllers
                 Log.Warning("Model state is invalid: {ModelStateErrors}", ModelState);
                 return BadRequest(ModelState);
             }
-            try
+
+            if (_memoryCache.TryGetValue(taxPayer.SSN, out Taxes cachedTaxes))
             {
-
-                if (_memoryCache.TryGetValue(taxPayer.SSN, out Taxes cachedTaxes))
-                {
-                    Log.Information("Tax Payer found in cache: " + taxPayer.SSN);
-                    return Ok(cachedTaxes);
-                }
-
-                var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
-                Log.Information("New tax calculated. " + JsonConvert.SerializeObject(taxes));
-
-                _memoryCache.Set(taxPayer.SSN, taxes, TimeSpan.FromDays(1));
-
-
-                return Ok(taxes);
+                Log.Information("Tax Payer found in cache: " + taxPayer.SSN);
+                return Ok(cachedTaxes);
             }
-            catch (ArgumentException aex)
-            {
-                Log.Error(aex, "An argument exception occurred while calculating taxes for SSN: {SSN}", taxPayer.SSN);
 
-                return BadRequest(aex.Message);
-            }
-            catch (InvalidOperationException ioex)
-            {
-                Log.Error(ioex, "An invalid operation occurred while calculating taxes for SSN: {SSN}", taxPayer.SSN);
+            var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
+            Log.Information("New tax calculated. " + JsonConvert.SerializeObject(taxes));
 
-                return BadRequest("An error occurred during the tax calculation process." + ioex.Message);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "An unexpected error occurred while calculating taxes for SSN: {SSN}", taxPayer.SSN);
+            _memoryCache.Set(taxPayer.SSN, taxes, TimeSpan.FromDays(1));
 
-                return BadRequest("An unexpected error occurred." + ex.Message);
-
-            }
+            return Ok(taxes);
         }
     }
 }

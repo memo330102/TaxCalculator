@@ -45,6 +45,11 @@ namespace TaxCalculator.Infrastructure.Services
                 Log.Error(ex, "Social Tax Error InvalidOperationException ", ex.Message);
                 throw;
             }
+            catch (KeyNotFoundException ex)
+            {
+                Log.Error(ex, "Social Tax Error KeyNotFoundException ", ex.Message);
+                throw;
+            }
             catch (Exception ex)
             {
                 Log.Error(ex, "Social Tax Error Exception ", ex.Message);

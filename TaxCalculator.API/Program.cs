@@ -8,6 +8,7 @@ using TaxCalculator.Infrastructure.Sql.Models;
 using SQLitePCL;
 using TaxCalculator.Domain.ValueObjects;
 using Serilog;
+using TaxCalculator.Application.Middleware;
 
 Batteries.Init(); // Initialize SQLite
 
@@ -25,17 +26,23 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<TaxConfig>(builder.Configuration.GetSection("TaxConfig"));
-builder.Host.UseSerilog();
+
 builder.Services.AddScoped<ITaxCalculationService,TaxCalculationService>();
+
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();
 builder.Services.AddTransient<IHelperTaxCalculation, HelperTaxCalculation>();
 builder.Services.AddTransient<ISqlQuery, SqlQuery>();
+
 builder.Services.AddSingleton<DbConnections>();
+
 builder.Services.AddHostedService<DBContext>();
+
 builder.Services.AddMemoryCache();
+builder.Host.UseSerilog();
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandler>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

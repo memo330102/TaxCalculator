@@ -43,6 +43,11 @@ namespace TaxCalculator.Infrastructure.Services
                 Log.Error(ex, "Income Tax Error InvalidOperationException ", ex.Message);
                 throw;
             }
+            catch (KeyNotFoundException ex)
+            {
+                Log.Error(ex, "Income Tax Error KeyNotFoundException ", ex.Message);
+                throw;
+            }
             catch (Exception ex)
             {
                 Log.Error(ex, "Income Tax Error ", ex.Message);
