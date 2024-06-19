@@ -9,6 +9,8 @@ using SQLitePCL;
 using TaxCalculator.Domain.ValueObjects;
 using Serilog;
 using TaxCalculator.Application.Middleware;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 Batteries.Init(); // Initialize SQLite
 
@@ -27,7 +29,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<TaxConfig>(builder.Configuration.GetSection("TaxConfig"));
 
-builder.Services.AddScoped<ITaxCalculationService,TaxCalculationService>();
+builder.Services.AddScoped<ITaxCalculationService, TaxCalculationService>();
 
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();
@@ -40,6 +42,14 @@ builder.Services.AddHostedService<DBContext>();
 
 builder.Services.AddMemoryCache();
 builder.Host.UseSerilog();
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandler>();
