@@ -51,7 +51,7 @@ namespace TaxCalculator.Infrastructure.Sql.Models
 
             await _sqlQuery.ExecuteAsync(createTableQuery);
 
-            await insertDefaultValuesToTable();
+            await InsertDefaultValuesToTable();
         }
 
 
@@ -63,7 +63,7 @@ namespace TaxCalculator.Infrastructure.Sql.Models
             return recordCount;
         }
 
-        public async Task insertDefaultValuesToTable()
+        public async Task InsertDefaultValuesToTable()
         {
             if (await CheckTagConfigTableCount() == 0)
             {
