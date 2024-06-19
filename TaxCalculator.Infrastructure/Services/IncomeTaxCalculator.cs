@@ -21,38 +21,16 @@ namespace TaxCalculator.Infrastructure.Services
 
         public async Task<decimal> CalculateTax(TaxPayer taxPayer)
         {
-            try
-            {
-                var taxConfig = await _helperTaxCalculation.GetTaxConfigAsync();
 
-                decimal taxableIncome = await _helperTaxCalculation.TaxableIncome(taxPayer.GrossIncome);
+            var taxConfig = await _helperTaxCalculation.GetTaxConfigAsync();
 
-                decimal charityAdjustment = await _helperTaxCalculation.CharityAdjustment(taxPayer.GrossIncome, taxPayer.CharitySpent);
+            decimal taxableIncome = await _helperTaxCalculation.TaxableIncome(taxPayer.GrossIncome);
 
-                taxableIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+            decimal charityAdjustment = await _helperTaxCalculation.CharityAdjustment(taxPayer.GrossIncome, taxPayer.CharitySpent);
 
-                return taxableIncome * taxConfig.IncomeTaxRate;
-            }
-            catch (ArgumentNullException ex)
-            {
-                Log.Error(ex, "Income Tax Error ArgumentNullException ", ex.Message);
-                throw;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Log.Error(ex, "Income Tax Error InvalidOperationException ", ex.Message);
-                throw;
-            }
-            catch (KeyNotFoundException ex)
-            {
-                Log.Error(ex, "Income Tax Error KeyNotFoundException ", ex.Message);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Income Tax Error ", ex.Message);
-                throw;
-            }
+            taxableIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
+
+            return taxableIncome * taxConfig.IncomeTaxRate;
         }
     }
 }
