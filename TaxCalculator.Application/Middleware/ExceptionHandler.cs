@@ -56,7 +56,7 @@ namespace TaxCalculator.Application.Middleware
                     break;
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
-                    message = "Internal Server Error. Please try again later.";
+                    message = "Internal Server Error.";
                     break;
             }
 
