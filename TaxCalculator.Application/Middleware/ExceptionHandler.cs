@@ -54,6 +54,10 @@ namespace TaxCalculator.Application.Middleware
                     statusCode = HttpStatusCode.NotFound;
                     message = "Resource not found.";
                     break;
+                case Exception _:
+                    statusCode = HttpStatusCode.BadRequest;
+                    message = "Exception found.";
+                    break;
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
                     message = "Internal Server Error.";
