@@ -4,7 +4,6 @@ using TaxCalculator.Infrastructure.Helpers;
 using TaxCalculator.Infrastructure.Connection;
 using TaxCalculator.Infrastructure.Services;
 using TaxCalculator.Infrastructure.Sql.Dapper;
-using TaxCalculator.Infrastructure.Sql.Models;
 using SQLitePCL;
 using TaxCalculator.Domain.ValueObjects;
 using Serilog;
@@ -43,7 +42,7 @@ builder.Services.AddTransient<ISqlQuery, SqlQuery>();
 
 builder.Services.AddSingleton<DbConnections>();
 
-builder.Services.AddHostedService<DBContext>();
+builder.Services.AddHostedService<HostedService>();
 
 builder.Services.AddMemoryCache();
 builder.Services.AddTransient<ICachingService, InMemoryCachingService>();
