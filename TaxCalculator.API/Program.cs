@@ -11,6 +11,8 @@ using Serilog;
 using TaxCalculator.Application.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using TaxCalculator.API.Configurations;
 
 Batteries.Init(); // Initialize SQLite
 
@@ -25,7 +27,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<TaxConfig>(builder.Configuration.GetSection("TaxConfig"));
 
@@ -43,13 +44,23 @@ builder.Services.AddHostedService<DBContext>();
 builder.Services.AddMemoryCache();
 builder.Host.UseSerilog();
 
-builder.Services.AddApiVersioning(options =>
+#region Services.Swagger.ApiVersioning
+builder.Services.AddApiVersioning(o =>
 {
-    options.ReportApiVersions = true;
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    o.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.ReportApiVersions = true;
 });
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+builder.Services.AddSwaggerGen();
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+#endregion
+
+
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandler>();
@@ -57,8 +68,15 @@ app.UseMiddleware<ExceptionHandler>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", "Version: " + description.GroupName.ToUpperInvariant());
+        }
+    });
 }
 
 app.UseHttpsRedirection();
