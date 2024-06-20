@@ -9,12 +9,11 @@ using SQLitePCL;
 using TaxCalculator.Domain.ValueObjects;
 using Serilog;
 using TaxCalculator.Application.Middleware;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using TaxCalculator.API.Configurations;
 using TaxCalculator.Domain.Interfaces.Caching;
 using TaxCalculator.Caching;
+using TaxCalculator.Domain.Interfaces.Application;
 
 Batteries.Init(); // Initialize SQLite
 

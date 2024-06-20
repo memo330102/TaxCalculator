@@ -1,5 +1,6 @@
 ﻿using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Interfaces;
+using TaxCalculator.Domain.Interfaces.Application;
 using TaxCalculator.Domain.ValueObjects;
 
 namespace TaxCalculator.Application.Services

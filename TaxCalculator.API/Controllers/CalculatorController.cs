@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Serilog;
-using TaxCalculator.Application.Services;
 using TaxCalculator.Domain.Entities;
+using TaxCalculator.Domain.Interfaces.Application;
 using TaxCalculator.Domain.Interfaces.Caching;
 using TaxCalculator.Domain.ValueObjects;
 
