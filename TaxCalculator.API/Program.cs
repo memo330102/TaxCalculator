@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using TaxCalculator.API.Configurations;
+using TaxCalculator.Domain.Interfaces.Caching;
+using TaxCalculator.Caching;
 
 Batteries.Init(); // Initialize SQLite
 
@@ -42,6 +44,8 @@ builder.Services.AddSingleton<DbConnections>();
 builder.Services.AddHostedService<DBContext>();
 
 builder.Services.AddMemoryCache();
+builder.Services.AddTransient<ICachingService, InMemoryCachingService>();
+
 builder.Host.UseSerilog();
 
 #region Services.Swagger.ApiVersioning

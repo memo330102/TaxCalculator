@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Serilog;
 using TaxCalculator.Application.Services;
 using TaxCalculator.Domain.Entities;
+using TaxCalculator.Domain.Interfaces.Caching;
 using TaxCalculator.Domain.ValueObjects;
 
 namespace TaxCalculator.API.Controllers
@@ -14,11 +15,11 @@ namespace TaxCalculator.API.Controllers
     public class CalculatorController : ControllerBase
     {
         private readonly ITaxCalculationService _taxCalculationService;
-        private readonly IMemoryCache _memoryCache;
-        public CalculatorController(ITaxCalculationService taxCalculationService, IMemoryCache memoryCache)
+        private readonly ICachingService _cachingService;
+        public CalculatorController(ITaxCalculationService taxCalculationService, ICachingService cachingService)
         {
             _taxCalculationService = taxCalculationService;
-            _memoryCache = memoryCache;
+            _cachingService = cachingService;
         }
 
         [HttpPost("calculate")]
@@ -36,16 +37,18 @@ namespace TaxCalculator.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (_memoryCache.TryGetValue(taxPayer.SSN, out Taxes cachedTaxes))
+            string cacheKey = taxPayer.SSN.ToString();
+            if (await _cachingService.ExistsAsync(cacheKey))
             {
-                Log.Information("Tax Payer found in cache: " + taxPayer.SSN);
+                Log.Information("Tax Payer found in cache:{taxPayer.SSN} " + taxPayer.SSN);
+                var cachedTaxes = await _cachingService.GetAsync<Taxes>(cacheKey);
                 return Ok(cachedTaxes);
             }
 
             var taxes = await _taxCalculationService.CalculateTaxes(taxPayer);
             Log.Information("New tax calculated. " + JsonConvert.SerializeObject(taxes));
 
-            _memoryCache.Set(taxPayer.SSN, taxes, TimeSpan.FromDays(1));
+            await _cachingService.SetAsync(cacheKey, taxes, TimeSpan.FromDays(1));
 
             return Ok(taxes);
         }
