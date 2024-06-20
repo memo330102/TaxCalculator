@@ -14,6 +14,8 @@ using TaxCalculator.API.Configurations;
 using TaxCalculator.Domain.Interfaces.Caching;
 using TaxCalculator.Caching;
 using TaxCalculator.Domain.Interfaces.Application;
+using TaxCalculator.Domain.Interfaces.Infrastructure.Repositories;
+using TaxCalculator.Infrastructure.Repositories;
 
 Batteries.Init(); // Initialize SQLite
 
@@ -36,6 +38,7 @@ builder.Services.AddScoped<ITaxCalculationService, TaxCalculationService>();
 builder.Services.AddTransient<ITaxCalculator, IncomeTaxCalculator>();
 builder.Services.AddTransient<ITaxCalculator, SocialTaxCalculator>();
 builder.Services.AddTransient<IHelperTaxCalculation, HelperTaxCalculation>();
+builder.Services.AddTransient<ITaxConfigRepository, TaxConfigRepository>();
 builder.Services.AddTransient<ISqlQuery, SqlQuery>();
 
 builder.Services.AddSingleton<DbConnections>();

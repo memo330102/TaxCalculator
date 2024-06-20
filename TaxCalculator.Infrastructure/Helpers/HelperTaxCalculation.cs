@@ -1,25 +1,26 @@
 ﻿using TaxCalculator.Domain.Interfaces;
+using TaxCalculator.Domain.Interfaces.Infrastructure.Repositories;
 using TaxCalculator.Domain.ValueObjects;
 
 namespace TaxCalculator.Infrastructure.Helpers
 {
     public class HelperTaxCalculation : IHelperTaxCalculation
     {
-        private readonly ISqlQuery _sqlQuery;
-        public HelperTaxCalculation(ISqlQuery sqlQuery)
+        private readonly ITaxConfigRepository _taxConfigRepository;
+        public HelperTaxCalculation(ITaxConfigRepository taxConfigRepository)
         {
-            _sqlQuery = sqlQuery;
+            _taxConfigRepository = taxConfigRepository;
         }
         public async Task<decimal> TaxableIncome(decimal grossIncome)
         {
-            var taxConfig = await GetTaxConfigAsync();
+            var taxConfig = await _taxConfigRepository.GetTaxConfigAsync();
 
             return grossIncome > taxConfig.MinApplyableIncomeTax ? grossIncome - taxConfig.MinApplyableIncomeTax : 0;
         }
 
         public async Task<decimal> CharityAdjustment(decimal grossIncome, decimal charitySpent)
         {
-            var taxConfig = await GetTaxConfigAsync();
+            var taxConfig = await _taxConfigRepository.GetTaxConfigAsync();
 
             return Math.Min(charitySpent, grossIncome * taxConfig.CharitySpentMaxRate);
         }
@@ -29,12 +30,6 @@ namespace TaxCalculator.Infrastructure.Helpers
             var adjustedIncome = taxableIncome - charityAdjustment;
 
             return Math.Max(adjustedIncome, 0);
-        }
-
-        public async Task<TaxConfig> GetTaxConfigAsync()
-        {
-            var query = @"SELECT * FROM TaxConfig LIMIT 1;";
-            return await _sqlQuery.QueryAsyncFirstOrDefault<TaxConfig>(query);
         }
     }
 }

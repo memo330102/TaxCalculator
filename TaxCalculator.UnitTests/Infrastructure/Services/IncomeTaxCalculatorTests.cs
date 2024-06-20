@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using TaxCalculator.Domain.Entities;
 using TaxCalculator.Domain.Interfaces;
+using TaxCalculator.Domain.Interfaces.Infrastructure.Repositories;
 using TaxCalculator.Domain.ValueObjects;
 using TaxCalculator.Infrastructure.Services;
 using Xunit;
@@ -12,11 +13,13 @@ namespace TaxCalculator.UnitTests.Infrastructure.Services
     public class IncomeTaxCalculatorTests
     {
         private readonly Mock<IHelperTaxCalculation> _mockHelperTaxCalculation;
+        private readonly Mock<ITaxConfigRepository> _mockTaxConfigRepository;
         private readonly IncomeTaxCalculator _incomeTaxCalculator;
         public IncomeTaxCalculatorTests()
         {
             _mockHelperTaxCalculation = new Mock<IHelperTaxCalculation>();
-            _incomeTaxCalculator = new IncomeTaxCalculator(_mockHelperTaxCalculation.Object);
+            _mockTaxConfigRepository = new Mock<ITaxConfigRepository>();
+            _incomeTaxCalculator = new IncomeTaxCalculator(_mockHelperTaxCalculation.Object, _mockTaxConfigRepository.Object);
 
             Setup();
         }
@@ -30,7 +33,7 @@ namespace TaxCalculator.UnitTests.Infrastructure.Services
                 CharitySpentMaxRate = 0.10m,
             };
 
-            _mockHelperTaxCalculation
+            _mockTaxConfigRepository
                 .Setup(h => h.GetTaxConfigAsync())
                 .ReturnsAsync(taxConfig);
 

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using System.Threading.Tasks;
 using TaxCalculator.Domain.Interfaces;
+using TaxCalculator.Domain.Interfaces.Infrastructure.Repositories;
 using TaxCalculator.Domain.ValueObjects;
 using TaxCalculator.Infrastructure.Helpers;
 using Xunit;
@@ -9,13 +10,13 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
 {
     public class HelperTaxCalculationTests
     {
-        private readonly Mock<ISqlQuery> _mockSqlQuery;
+        private readonly Mock<ITaxConfigRepository> _mockTaxConfigRepository;
         private readonly HelperTaxCalculation _helperTaxCalculation;
 
         public HelperTaxCalculationTests()
         {
-            _mockSqlQuery = new Mock<ISqlQuery>();
-            _helperTaxCalculation = new HelperTaxCalculation(_mockSqlQuery.Object);
+            _mockTaxConfigRepository = new Mock<ITaxConfigRepository>();
+            _helperTaxCalculation = new HelperTaxCalculation(_mockTaxConfigRepository.Object);
 
             var taxConfig = new TaxConfig
             {
@@ -27,8 +28,8 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
                 MaxApplyableSocialTax = 3000
             };
 
-            _mockSqlQuery
-                .Setup(sq => sq.QueryAsyncFirstOrDefault<TaxConfig>(It.IsAny<string>(),It.IsAny<object>()))
+            _mockTaxConfigRepository
+                .Setup(sq => sq.GetTaxConfigAsync())
                 .ReturnsAsync(taxConfig);
         }
 
@@ -54,8 +55,8 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
         }
 
         [Theory]
-        [InlineData(2000, 150,150)]
-        [InlineData(3000,300,300)]
+        [InlineData(2000, 150, 150)]
+        [InlineData(3000, 300, 300)]
         public async Task HelperTaxCalculation_CharityAdjustment_With_CharitySpent_Should_Return_Adjustment(decimal grossIncome, decimal charitySpent, decimal expected)
         {
 
@@ -95,32 +96,6 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
             var adjustedIncome = await _helperTaxCalculation.AdjustTaxableIncome(taxableIncome, charityAdjustment);
 
             Assert.Equal(0, adjustedIncome);
-        }
-
-        [Fact]
-        public async Task HelperTaxCalculation_GetTaxConfigAsync_Should_Return_TaxConfig()
-        {
-            var expectedConfig = new TaxConfig
-            {
-                MinApplyableIncomeTax = 1000,
-                CharitySpentMaxRate = 0.10m,
-                IncomeTaxRate = 0.10m,
-                SocialTaxRate = 0.15m,
-                MinApplyableSocialTax = 1000,
-                MaxApplyableSocialTax = 3000
-            };
-            _mockSqlQuery
-                 .Setup(sq => sq.QueryAsyncFirstOrDefault<TaxConfig>(It.IsAny<string>(), It.IsAny<object>()))
-                 .ReturnsAsync(expectedConfig);
-
-            var actualConfig = await _helperTaxCalculation.GetTaxConfigAsync();
-
-            Assert.Equal(expectedConfig.MinApplyableIncomeTax, actualConfig.MinApplyableIncomeTax);
-            Assert.Equal(expectedConfig.CharitySpentMaxRate, actualConfig.CharitySpentMaxRate);
-            Assert.Equal(expectedConfig.IncomeTaxRate, actualConfig.IncomeTaxRate);
-            Assert.Equal(expectedConfig.SocialTaxRate, actualConfig.SocialTaxRate);
-            Assert.Equal(expectedConfig.MinApplyableSocialTax, actualConfig.MinApplyableSocialTax);
-            Assert.Equal(expectedConfig.MaxApplyableSocialTax, actualConfig.MaxApplyableSocialTax);
         }
     }
 }
