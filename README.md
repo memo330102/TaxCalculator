@@ -20,7 +20,8 @@ Project Structure
 2.	TaxCalculator.Domain: Contains domain entities, interfaces, enums and valueobjects.
 3.	TaxCalculator.Infrastructure: Contains the implementation of services, helpers and data access using Dapper.
 4.	TaxCalculator.Application: Contains business logic and service layer.
-5.	TaxCalculator.Tests: Contains unit tests covering all calculations and functionalities.
+5.	TaxCalculator.Caching: Contains the caching logic for in-memory operations, allowing easy integration with other caching mechanisms like Redis.
+6.	TaxCalculator.Tests: Contains unit tests covering all calculations and functionalities.
 
 Database
 
@@ -38,6 +39,14 @@ The application is designed with the Open-Closed Principle in mind, allowing eas
 2.	Implement the required methods.
 3.	The new tax type will be automatically integrated into the tax calculation process.
 This design makes the project easy to extend without modifying existing code.
+
+Caching
+
+Caching is implemented in the TaxCalculator.Caching project. The default implementation uses in-memory caching, but it can be extended to use other caching mechanisms like Redis.
+
+Global Exception Handling
+
+Global exception handling is implemented using middleware. This ensures that all exceptions are handled consistently across the application. The middleware catches exceptions like ArgumentException, InvalidOperationException, and Exception, returning appropriate HTTP status codes and error messages.
 
 Unit Testing
 
