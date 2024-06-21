@@ -14,6 +14,7 @@ COPY ["TaxCalculator.API/TaxCalculator.API.csproj", "TaxCalculator.API/"]
 COPY ["TaxCalculator.Application/TaxCalculator.Application.csproj", "TaxCalculator.Application/"]
 COPY ["TaxCalculator.Domain/TaxCalculator.Domain.csproj", "TaxCalculator.Domain/"]
 COPY ["TaxCalculator.Infrastructure/TaxCalculator.Infrastructure.csproj", "TaxCalculator.Infrastructure/"]
+COPY ["TaxCalculator.Caching/TaxCalculator.Caching.csproj", "TaxCalculator.Caching/"]"
 RUN dotnet restore "TaxCalculator.API/TaxCalculator.API.csproj"
 COPY . .
 WORKDIR "/src/TaxCalculator.API"
