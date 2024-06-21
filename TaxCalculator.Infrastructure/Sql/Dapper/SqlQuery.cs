@@ -1,9 +1,4 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaxCalculator.Domain.Interfaces;
 using TaxCalculator.Infrastructure.Connection;
 
