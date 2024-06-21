@@ -30,7 +30,7 @@ Database
 
 Initial Database Setup
 
-On project startup, the application creates the SQLite database as  “exadel” and initializes the “TaxConfig” table with default parameter values located in the “TaxCalculator.API/” folder.
+On project startup, the application creates the SQLite database as  “exadel” located in the “TaxCalculator.API/” folder and initializes the “TaxConfig” table with default parameter values by using IHostedService.
 
 Adding New Tax Types
 
@@ -78,8 +78,13 @@ Running the Application
     dotnet build and dotnet run
 
 Running With Docker
-1.	 docker-compose up -d AND docker-compose down --rmi local
-2.	 http://localhost:(local port or virtual machine port which is set on docker file)/swagger/index.html)
+
+1.	 docker-compose up -d 
+2.	 docker-compose down --rmi local
+
+ Access Swagger
+ 
+Open your browser and navigate to http://localhost:<Port>/swagger/index.html.
   	
  Conclusion
  
