@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxCalculator.UnitTests", "
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E638E8EB-7C86-442F-9ACB-2D232CAD7D00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.Caching", "..\TaxCalculator.Caching\TaxCalculator.Caching.csproj", "{FD157E9B-6B24-4849-AF55-31D99FD93944}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculator.Caching", "TaxCalculator.Caching\TaxCalculator.Caching.csproj", "{F9FB76DD-CA7D-499F-91A3-C8C2454A6E98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{E638E8EB-7C86-442F-9ACB-2D232CAD7D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E638E8EB-7C86-442F-9ACB-2D232CAD7D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E638E8EB-7C86-442F-9ACB-2D232CAD7D00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD157E9B-6B24-4849-AF55-31D99FD93944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD157E9B-6B24-4849-AF55-31D99FD93944}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD157E9B-6B24-4849-AF55-31D99FD93944}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD157E9B-6B24-4849-AF55-31D99FD93944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9FB76DD-CA7D-499F-91A3-C8C2454A6E98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9FB76DD-CA7D-499F-91A3-C8C2454A6E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9FB76DD-CA7D-499F-91A3-C8C2454A6E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9FB76DD-CA7D-499F-91A3-C8C2454A6E98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

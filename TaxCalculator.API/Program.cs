@@ -11,10 +11,10 @@ using TaxCalculator.Application.Middleware;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using TaxCalculator.API.Configurations;
 using TaxCalculator.Domain.Interfaces.Caching;
-using TaxCalculator.Caching;
 using TaxCalculator.Domain.Interfaces.Application;
 using TaxCalculator.Domain.Interfaces.Infrastructure.Repositories;
 using TaxCalculator.Infrastructure.Repositories;
+using TaxCalculator.Caching;
 
 Batteries.Init(); // Initialize SQLite
 
