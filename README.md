@@ -67,6 +67,10 @@ Running the Application
     cd TaxCalculator.API
 3.	Build and Run the Application:
     dotnet build and dotnet run
+
+Running With Docker
+1.	 docker-compose up -d AND docker-compose down --rmi local
+2.	 http://localhost:(local port or virtual machine port which is set on docker file)/swagger/index.html)
   	
  Conclusion
  
