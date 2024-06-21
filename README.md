@@ -46,15 +46,22 @@ Caching is implemented in the TaxCalculator.Caching project. The default impleme
 
 Global Exception Handling
 
-Global exception handling is implemented using middleware. This ensures that all exceptions are handled consistently across the application. The middleware catches exceptions like ArgumentException, InvalidOperationException, and Exception, returning appropriate HTTP status codes and error messages.
+Global exception handling is implemented using middleware. This ensures that all exceptions are handled consistently across the application. 
+The middleware catches exceptions like ArgumentException, InvalidOperationException, and Exception, returning appropriate HTTP status codes and error messages.
 
 Unit Testing
 
-The project includes comprehensive unit tests to cover all possible scenarios for tax calculations. XUnit is used as the testing framework to ensure code quality and correctness.
+The project includes comprehensive unit tests to cover all possible scenarios for tax calculations. 
+XUnit is used as the testing framework to ensure code quality and correctness.
 
 Logging
 
 Serilog is used for structured logging, making it easier to trace and debug the application.
+
+API Versioning
+
+The API includes versioning to support multiple API versions.
+This allows different clients to work with different versions of the API without affecting each other.
 
 Docker Support
 
