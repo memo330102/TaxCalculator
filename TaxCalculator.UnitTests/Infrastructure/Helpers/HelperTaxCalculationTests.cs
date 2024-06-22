@@ -19,12 +19,12 @@ namespace TaxCalculator.UnitTests.Infrastructure.Helpers
 
             var taxConfig = new TaxConfig
             {
-                MinApplyableIncomeTax = 1000,
+                MinApplyableIncomeTax = 1000m,
                 CharitySpentMaxRate = 0.10m,
                 IncomeTaxRate = 0.10m,
                 SocialTaxRate = 0.15m,
-                MinApplyableSocialTax = 1000,
-                MaxApplyableSocialTax = 3000
+                MinApplyableSocialTax = 1000m,
+                MaxApplyableSocialTax = 3000m
             };
 
             _mockTaxConfigRepository
